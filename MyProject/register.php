@@ -5,6 +5,8 @@ require_once "config.php";
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = "";
 $username_err = $password_err = $confirm_password_err = "";
+$fullName = $fullName_err = "";
+//$dateOfBirth = $dateOfBirth_err = "";
 $address = $address_err = "";
  
 // Processing form data when form is submitted
@@ -91,6 +93,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         }
     }
     
+    //validate fullanme entry
+    if(empty(trim($_POST["fullName"]))){
+        
+        $fullName_err = "Please enter your full name.";
+        
+    } else if (ctype_alpha(str_replace(' ', '', $_POST["fullName"])) === false){
+        
+        $fullName_err = "Please input a name containing only A-Z characters.";
+        
+    } else {
+        
+        $fullName = trim($_POST["fullName"]);
+        
+    }
+    
+    /*validate date of birth entry
+    if(empty($_POST["dateOfBirth"])){
+        
+        $dateOfBirth_err = "Please enter a date of birth.";
+        
+    } else {
+        
+        $dateOfBirth = trim($_POST["dateOfBirth"]);
+        
+    }
+    */
+    
     //validate Address entry
     if(empty(trim($_POST["address"]))){
         
@@ -103,20 +132,29 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($address_err)){
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth) && empty($address_err)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password, address) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (username, password, fullName,  address) VALUES (?, ?, ?, ?)";
+        
+        /*
+        $sql = "INSERT INTO users (username, password, fullName, dateOfBirth, address) VALUES (?, ?, ?, ?, ?)";*/
          
         if($stmt = mysqli_prepare($link, $sql)){
             
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_password, $param_address);
+            /*mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address);*/
+            
+            mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_fullName, $param_address);
             
             // Set parameters
             $param_username = $username;
             
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
+            
+            $param_fullName = $fullName;
+            
+            /*$param_dateOfBirth = $dateOfBirth;*/
             
             $param_address = $address;
             
@@ -164,26 +202,52 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <h2>Sign Up to COVID Portal</h2>
         <p>Please fill this form to create an account.</p>
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            
+            <!--username field-->
             <div class="form-group">
                 <label>Username</label>
                 <input type="text" name="username" class="form-control <?php echo (!empty($username_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $username; ?>">
                 <span class="invalid-feedback"><?php echo $username_err; ?></span>
             </div>    
+            
+            <!--password field-->
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control <?php echo (!empty($password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $password; ?>">
                 <span class="invalid-feedback"><?php echo $password_err; ?></span>
             </div>
+            
+            <!--confirm password field-->
             <div class="form-group">
                 <label>Confirm Password</label>
                 <input type="password" name="confirm_password" class="form-control <?php echo (!empty($confirm_password_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $confirm_password; ?>">
                 <span class="invalid-feedback"><?php echo $confirm_password_err; ?></span>
             </div>
-             <div class="form-group">
+            
+            <!--full name field-->
+            <div class="form-group">
+                <label>Enter your full name</label>
+                <input type="text" name="fullName" class="form-control <?php echo (!empty($fullName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $fullName; ?>">
+                <span class="invalid-feedback"><?php echo $fullName_err; ?></span>
+            </div>
+            
+            
+            <!--date of birth field
+            <div class="form-group">
+                <label>Enter date of birth</label>
+                <input type="date" name="dateOfBirth" class="form-control <?php echo (!empty($dateOfBirth_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $dateOfBirth; ?>">
+                <span class="invalid-feedback"><?php echo $dateOfBirth_err; ?></span>
+            </div>
+            -->
+            
+            <!--address field-->
+            <div class="form-group">
                 <label>Enter address</label>
                 <input type="text" name="address" class="form-control <?php echo (!empty($address_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $address; ?>">
                 <span class="invalid-feedback"><?php echo $address_err; ?></span>
             </div>
+            
+            <!--submit button-->
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Submit">
                 <input type="reset" class="btn btn-secondary ml-2" value="Reset">

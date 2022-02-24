@@ -38,7 +38,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to the COVID Portal site.</h1>
     <div id = "user details">
         <h5 class = "my-5"> User Details </h5>
-        <h6 class = "my-5"> Name: </h6>
+        <h6 class = "my-5"> Name: <?php echo htmlspecialchars($_SESSION["fullName"]); ?></h6>
         <h6 class = "my-5"> Date Of Birth: </h6>    
         <h6 class = "my-5"> Address: <?php echo htmlspecialchars($_SESSION["address"]); ?></h6>    
     </div>

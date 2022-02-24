@@ -1,4 +1,19 @@
 <?php
+
+/*
+
+Scenario 1
+
+Upload an antigen test with a photo.
+
+Our national health service has decided to create a portal that will allow citizens to report a positive antigen test for COVID-19 and to list their close contacts online. 
+
+Citizens who have symptoms of the virus or are a close contact of a confirmed case can use store-bought test kits and upload any positive results to the portal. 
+
+The system will require citizens to create an account with a username and password, to provide personal information including full name, address, date of birth and phone number, and to upload an image of a positive antigen test. They can also provide a list of close contacts, including their full names and phone numbers.
+
+*/
+
 // Initialize the session
 session_start();
  
@@ -12,7 +27,7 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $address = "";
+$username = $password = $fullName = $address = "";
 $username_err = $password_err = $login_err = "";
 
  
@@ -46,7 +61,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err)){
         
         // Prepare a select statement
-        $sql = "SELECT id, username, password, address FROM users WHERE username = ?";
+        $sql = "SELECT id, username, password, fullName, address FROM users WHERE username = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
             
@@ -66,7 +81,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 if(mysqli_stmt_num_rows($stmt) == 1){      
                     
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $address);
+                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $fullName, $address);
                     
                     if(mysqli_stmt_fetch($stmt)){
                         
@@ -79,6 +94,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
                             $_SESSION["username"] = $username; 
+                            $_SESSION["fullName"] = $fullName;
                             $_SESSION["address"] = $address;
                             
                             // Redirect user to welcome page
