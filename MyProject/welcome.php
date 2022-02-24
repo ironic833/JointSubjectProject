@@ -36,9 +36,13 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
 </head>
 <body>
     <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to the COVID Portal site.</h1>
-    <div>
-            
+    <div id = "user details">
+        <h5 class = "my-5"> User Details </h5>
+        <h6 class = "my-5"> Name: </h6>
+        <h6 class = "my-5"> Date Of Birth: </h6>    
+        <h6 class = "my-5"> Address: <?php echo htmlspecialchars($_SESSION["address"]); ?></h6>    
     </div>
+    <br />
     <p>
         <a href="reset-password.php" class="btn btn-warning">Reset Your Password</a>
         <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
