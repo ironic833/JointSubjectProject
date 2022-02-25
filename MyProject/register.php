@@ -3,12 +3,10 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $confirm_password = "";
-$username_err = $password_err = $confirm_password_err = "";
-$fullName = $fullName_err = "";
+$username = $password = $confirm_password = $fullName = $address = $phoneNumber = "";
+$username_err = $password_err = $confirm_password_err = $fullName_err =  $address_err = $phoneNumber_err = "";
 //$dateOfBirth = $dateOfBirth_err = "";
-$address = $address_err = "";
- 
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
@@ -131,21 +129,32 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         
     }
     
+    //validate phone number entry
+    if(empty(trim($_POST["phoneNumber"]))){
+        
+        $phoneNumber_err = "Please enter an address.";
+        
+    } else {
+        
+        $phoneNumber = trim($_POST["phoneNumber"]);
+        
+    }
+    
     // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth) && empty($address_err)){
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) /*&& empty($dateOfBirth)*/ && empty($address_err) && empty($phoneNumber_err)){
         
         // Prepare an insert statement
-        $sql = "INSERT INTO users (username, password, fullName,  address) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO users (username, password, fullName,  address, phoneNumber) VALUES (?, ?, ?, ?, ?)";
         
         /*
-        $sql = "INSERT INTO users (username, password, fullName, dateOfBirth, address) VALUES (?, ?, ?, ?, ?)";*/
+        $sql = "INSERT INTO users (username, password, fullName, dateOfBirth, address, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)";*/
          
         if($stmt = mysqli_prepare($link, $sql)){
             
             // Bind variables to the prepared statement as parameters
             /*mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address);*/
             
-            mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_fullName, $param_address);
+            mysqli_stmt_bind_param($stmt, "sssss", $param_username, $param_password, $param_fullName, $param_address, $param_phoneNumber);
             
             // Set parameters
             $param_username = $username;
@@ -157,6 +166,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             /*$param_dateOfBirth = $dateOfBirth;*/
             
             $param_address = $address;
+            
+            $param_phoneNumber = $phoneNumber;
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
@@ -226,7 +237,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             <!--full name field-->
             <div class="form-group">
-                <label>Enter your full name</label>
+                <label>Enter Your Full Name</label>
                 <input type="text" name="fullName" class="form-control <?php echo (!empty($fullName_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $fullName; ?>">
                 <span class="invalid-feedback"><?php echo $fullName_err; ?></span>
             </div>
@@ -242,9 +253,16 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             
             <!--address field-->
             <div class="form-group">
-                <label>Enter address</label>
+                <label>Enter Address</label>
                 <input type="text" name="address" class="form-control <?php echo (!empty($address_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $address; ?>">
                 <span class="invalid-feedback"><?php echo $address_err; ?></span>
+            </div>
+            
+            <!--phone number field-->
+            <div class="form-group">
+                <label>Enter Phone Number</label>
+                <input type="tel" name="phoneNumber" class="form-control <?php echo (!empty($phoneNumber_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $phoneNumber; ?>"  placeholder="0xx xxx xxxx" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+                <span class="invalid-feedback"><?php echo $phoneNumber_err; ?></span>
             </div>
             
             <!--submit button-->

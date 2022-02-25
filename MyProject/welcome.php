@@ -40,7 +40,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
         <h5 class = "my-5"> User Details </h5>
         <h6 class = "my-5"> Name: <?php echo htmlspecialchars($_SESSION["fullName"]); ?></h6>
         <h6 class = "my-5"> Date Of Birth: </h6>    
-        <h6 class = "my-5"> Address: <?php echo htmlspecialchars($_SESSION["address"]); ?></h6>    
+        <h6 class = "my-5"> Address: <?php echo htmlspecialchars($_SESSION["address"]); ?></h6> 
+        <h6 class = "my-5"> Phone Number: <?php echo htmlspecialchars($_SESSION["phoneNumber"]); ?></h6>   
     </div>
     <br />
     <p>
