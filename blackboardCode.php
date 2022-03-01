@@ -11,15 +11,18 @@
 	}
 	if (isset($_POST['delete-everything'])) {
 		$sql = 'DROP DATABASE securenotepad;';
+        
 		if (!$conn->query($sql) === TRUE) {
 			die('Error dropping database: ' . $conn->error);
 		}
 	}
 	$sql = 'CREATE DATABASE IF NOT EXISTS securenotepad;';
+
 	if (!$conn->query($sql) === TRUE) {
 		die('Error creating database: ' . $conn->error);
 	}
 	$sql = 'USE securenotepad;';
+
 	if (!$conn->query($sql) === TRUE) {
 		die('Error using database: ' . $conn->error);
 	}
@@ -28,8 +31,9 @@
 		iv varchar(32) NOT NULL,
 		content varchar(256) NOT NULL,
 		PRIMARY KEY (id));';
+
 	if (!$conn->query($sql) === TRUE) {
-	die('Error creating table: ' . $conn->error);
+	   die('Error creating table: ' . $conn->error);
 	}
 	?>
 	<html>
