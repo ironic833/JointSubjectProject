@@ -8,42 +8,6 @@ require_once "config.php";
 $username = $password = $confirm_password = $fullName = $dateOfBirth = $address = $phoneNumber = "";
 $username_err = $password_err = $confirm_password_err = $fullName_err = $dateOfBirth_err =$address_err = $phoneNumber_err = "";
 
-$encryptionKeyToWrite = $encryptionIVToWrite = "";
-
-//function to be called for encryption
-function encrypt($data){
-    
-    //encryption function to run only on registration and populate the iv and encryption key to go into database along with user details 
-    
-    //Define cipher 
-    $cipher = "aes-256-cbc"; 
-
-    //Generate a 256-bit encryption key 
-    $encryptionKeyToWrite = $encryption_key = openssl_random_pseudo_bytes(32); 
-
-    // Generate an initialization vector 
-    $iv_size = openssl_cipher_iv_length($cipher); 
-    $encryptionIVToWrite = $iv = openssl_random_pseudo_bytes($iv_size); 
-
-    //encrypt data here 
-    $encrypted_data = openssl_encrypt($data, $cipher, $encryption_key, 0, $iv); 
-    
-    //returns encrypted data
-    return $encrypted_data;
-}
-
-//function to be called for encryption
-function decrypt($encrypted_data, $encryption_key, $iv){
-    
-    //Define cipher 
-    $cipher = "aes-256-cbc"; 
-
-    //Decrypt data 
-    $decrypted_data = openssl_decrypt($encrypted_data, $cipher, $encryption_key, 0, $iv);  
-    
-    return $decrypted_data;
-}
-
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
  
@@ -177,20 +141,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth_err) && empty($address_err) && empty($phoneNumber_err)){
-        
-        // Prepare an insert statement
-        /*$sql = "INSERT INTO users (username, password, fullName,  address, phoneNumber) VALUES (?, ?, ?, ?, ?)";*/
-        
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth_err) && empty($address_err) && empty($phoneNumber_err) && !empty($encryptionKeyToWrite)){
         
         $sql = "INSERT INTO users (username, password, fullName, dateOfBirth, address, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             
-            // Bind variables to the prepared statement as parameters
-            /*mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_password, $param_fullName, $param_address, $param_phoneNumber);*/
             
-            mysqli_stmt_bind_param($stmt, "ssssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address, $param_phoneNumber);
+            mysqli_stmt_bind_param($stmt, "sssssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address, $param_phoneNumber, $param_encryptionKeyToWrite);
             
             // Set parameters
             $param_username = $username;
