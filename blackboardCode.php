@@ -52,17 +52,12 @@
 		if (isset($_POST['new-note'])) {
 		
 			$iv = random_bytes(16);
-			$escaped_content = $conn -> real_escape_string($_POST['content']);
+			$escaped_content = real_escape_string($_POST['content']);
 			$encrypted_content = openssl_encrypt($escaped_content, $cipher, $key, OPENSSL_RAW_DATA, $iv);
 			$iv_hex = bin2hex($iv);
 			$content_hex = bin2hex($encrypted_content);
-			$sql = "INSERT INTO notes (iv, content) VALUES ('$iv_hex', '$content_hex')";
-			
-			if ($conn->query($sql) === TRUE) {
-				echo '<p><i>New note added!</i></p>';
-			} else {
-				die('Error creating note: ' . $conn->error);
-			}
+			//$sql = "INSERT INTO notes (iv, content) VALUES ('$iv_hex', '$content_hex')";
+            
 		}
 		
 		?>

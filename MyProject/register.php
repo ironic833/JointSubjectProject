@@ -141,14 +141,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     }
     
     // Check input errors before inserting in database
-    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth_err) && empty($address_err) && empty($phoneNumber_err) && !empty($encryptionKeyToWrite)){
+    if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth_err) && empty($address_err) && empty($phoneNumber_err)){
         
         $sql = "INSERT INTO users (username, password, fullName, dateOfBirth, address, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             
             
-            mysqli_stmt_bind_param($stmt, "sssssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address, $param_phoneNumber, $param_encryptionKeyToWrite);
+            mysqli_stmt_bind_param($stmt, "ssssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address, $param_phoneNumber);
             
             // Set parameters
             $param_username = $username;
