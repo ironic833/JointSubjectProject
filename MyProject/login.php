@@ -27,8 +27,10 @@ if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $fullName = $dateOfBirth = $address = $phoneNumber = "";
+$username = $password = $fullName = $dateOfBirth = $address = $phoneNumber = $iv_hex = "";
 $username_err = $password_err = $login_err = "";
+$cipher = 'AES-128-CBC';
+$key = 'thebestsecretkey';
 
  
 // Processing form data when form is submitted
@@ -61,7 +63,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(empty($username_err) && empty($password_err)){
         
         // Prepare a select statement
-        $sql = "SELECT id, username, password, fullName, dateOfBirth, address, phoneNumber FROM users WHERE username = ?";
+        $sql = "SELECT id, iv_hex, username, password, fullName, dateOfBirth, address, phoneNumber FROM users WHERE username = ?";
         
         if($stmt = mysqli_prepare($link, $sql)){
             
@@ -81,7 +83,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 if(mysqli_stmt_num_rows($stmt) == 1){      
                     
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $hashed_password, $fullName, $dateOfBirth, $address, $phoneNumber);
+                    mysqli_stmt_bind_result($stmt, $id, $iv_hex, $username, $hashed_password, $fullName, $dateOfBirth, $address, $phoneNumber);          
                     
                     if(mysqli_stmt_fetch($stmt)){
                         
@@ -93,9 +95,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;
+                            $_SESSION["iv_hex"] = $iv_hex;
                             $_SESSION["username"] = $username; 
                             $_SESSION["fullName"] = $fullName;
-                            $_SESSION["dateOfBirth"] = $dateOfBirth;
+                            $_SESSION["dateOfBirth"] =  $dateOfBirth;
                             $_SESSION["address"] = $address;
                             $_SESSION["phoneNumber"] = $phoneNumber;
                             

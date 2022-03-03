@@ -38,10 +38,52 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     <h1 class="my-5">Hi, <b><?php echo htmlspecialchars($_SESSION["username"]); ?></b>. Welcome to the COVID Portal site.</h1>
     <div id = "user details">
         <h5 class = "my-5"> User Details </h5>
-        <h6 class = "my-5"> Name: <?php echo htmlspecialchars($_SESSION["fullName"]); ?></h6>
-        <h6 class = "my-5"> Date Of Birth: <?php echo htmlspecialchars($_SESSION["dateOfBirth"]); ?></h6>    
-        <h6 class = "my-5"> Address: <?php echo htmlspecialchars($_SESSION["address"]); ?></h6> 
-        <h6 class = "my-5"> Phone Number: <?php echo htmlspecialchars($_SESSION["phoneNumber"]); ?></h6>   
+        <h6 class = "my-5"> Name: <?php 
+            
+            $cipher = 'AES-128-CBC';
+	        $key = 'thebestsecretkey';
+            $iv_hex = $_SESSION["iv_hex"];
+            $iv = hex2bin($iv_hex);
+            $fullName = hex2bin($_SESSION["fullName"]);
+            $unencrypted_fullName = openssl_decrypt($fullName, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+            
+            echo htmlspecialchars($unencrypted_fullName); ?>
+            
+        </h6>
+        <h6 class = "my-5"> Date Of Birth: <?php 
+            
+            $cipher = 'AES-128-CBC';
+	        $key = 'thebestsecretkey';
+            $iv_hex = $_SESSION["iv_hex"];
+            $iv = hex2bin($iv_hex);
+            $dateOfBirth = hex2bin($_SESSION["dateOfBirth"]);
+            $unencrypted_dateOfBirth = openssl_decrypt($dateOfBirth, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+            
+            echo htmlspecialchars($unencrypted_dateOfBirth); ?>
+            
+        </h6>    
+        <h6 class = "my-5"> Address: <?php 
+            
+            $cipher = 'AES-128-CBC';
+	        $key = 'thebestsecretkey';
+            $iv_hex = $_SESSION["iv_hex"];
+            $iv = hex2bin($iv_hex);
+            $address = hex2bin($_SESSION["address"]);
+            $unencrypted_address = openssl_decrypt($address, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+            
+            echo htmlspecialchars($unencrypted_address); ?>
+            
+        </h6>
+        <h6 class = "my-5"> Phone Number: <?php
+            
+            $cipher = 'AES-128-CBC';
+	        $key = 'thebestsecretkey';
+            $iv_hex = $_SESSION["iv_hex"];
+            $iv = hex2bin($iv_hex);
+            $phoneNumber = hex2bin($_SESSION["phoneNumber"]);
+            $unencrypted_phoneNumber = openssl_decrypt($phoneNumber, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+            
+            echo htmlspecialchars($unencrypted_phoneNumber); ?></h6>   
     </div>
     <br />
     <p>

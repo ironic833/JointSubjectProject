@@ -7,6 +7,8 @@ require_once "config.php";
 // Define variables and initialize with empty values
 $username = $password = $confirm_password = $fullName = $dateOfBirth = $address = $phoneNumber = "";
 $username_err = $password_err = $confirm_password_err = $fullName_err = $dateOfBirth_err =$address_err = $phoneNumber_err = "";
+$cipher = 'AES-128-CBC';
+$key = 'thebestsecretkey';
 
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -143,25 +145,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth_err) && empty($address_err) && empty($phoneNumber_err)){
         
-        $sql = "INSERT INTO users (username, password, fullName, dateOfBirth, address, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (iv_hex, username, password, fullName, dateOfBirth, address, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?)";
          
         if($stmt = mysqli_prepare($link, $sql)){
             
+             $iv = random_bytes(16);
             
-            mysqli_stmt_bind_param($stmt, "ssssss", $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address, $param_phoneNumber);
+             $escaped_fullName = $link -> real_escape_string($_POST['fullName']);
+             $encrypted_fullName = openssl_encrypt($escaped_fullName, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+             $fullName_hex = bin2hex($encrypted_fullName);
+            
+             $escaped_dateOfBirth = $link -> real_escape_string($_POST['dateOfBirth']);
+             $encrypted_dateOfBirth = openssl_encrypt($escaped_dateOfBirth, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+             $dateOfBirth_hex = bin2hex($encrypted_dateOfBirth);
+            
+             $escaped_address = $link -> real_escape_string($_POST['address']);
+             $encrypted_address = openssl_encrypt($escaped_address, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+             $address_hex = bin2hex($encrypted_address);
+            
+             $escaped_phoneNumber = $link -> real_escape_string($_POST['phoneNumber']);
+             $encrypted_phoneNumber = openssl_encrypt($escaped_phoneNumber, $cipher, $key, OPENSSL_RAW_DATA, $iv);
+             $phoneNumber_hex = bin2hex($encrypted_phoneNumber);
+            
+             $iv_hex = bin2hex($iv);
+            
+            mysqli_stmt_bind_param($stmt, "sssssss", $param_iv_hex, $param_username, $param_password, $param_fullName, $param_dateOfBirth, $param_address, $param_phoneNumber);
             
             // Set parameters
+            $param_iv_hex = $iv_hex;
+            
             $param_username = $username;
             
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             
-            $param_fullName = $fullName;
+            $param_fullName = $fullName_hex;
             
-            $param_dateOfBirth = $dateOfBirth;
+            $param_dateOfBirth = $dateOfBirth_hex;
             
-            $param_address = $address;
+            $param_address = $address_hex;
             
-            $param_phoneNumber = $phoneNumber;
+            $param_phoneNumber = $phoneNumber_hex;
             
             // Attempt to execute the prepared statement
             if(mysqli_stmt_execute($stmt)){
