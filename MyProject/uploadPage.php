@@ -58,7 +58,7 @@
         </style>
     </head>
     <body>
-        <h1>File Uploads</h1>
+        <h1 class = "my-5">File Uploads For <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
         <?php
             if (isset($_POST['submit'])) {
 
@@ -74,20 +74,20 @@
 
               $sql = "INSERT INTO images (username, iv, img_file_name, img_contents) VALUES ('$username','$iv_hex','$img_name','$img_hex')";
                 
-              if ($link->query($sql) === TRUE) {
+              if ($link->query($sql) === TRUE ) {
                   
-                echo '<p><i>New note added!</i></p>';
+                echo '<p><i>New test result added!</i></p>';
                   
               } else {
                   
-                die('Error creating note: ' . $link->error);
+                die('Error adding image: ' . $link->error);
                   
               }
                 
             }
         ?>
         
-        <h2>Create a New Note</h2>
+        <h6 class = "my-5">Add Image</h6>
         <div class="custom-file mb-3">
             <form method="post" enctype='multipart/form-data'>
               <div class="form-group">
@@ -97,56 +97,65 @@
               <button type="submit" class="btn btn-primary" name="submit">Submit</button>
             </form>
         </div>
+        <div>
+            <div>
+                <h6 class = "my-5"  style="padding-top: 50px;">Existing Images</h6>
+            </div>
+            <div style="padding-left: 33%;">
+                <?php
 
-        <h2>List Existing Notes</h2>
+                    $sql = "SELECT id, username, iv, img_file_name, img_contents FROM images";
 
-        <?php
-        
-            $sql = "SELECT id, username, iv, img_file_name, img_contents FROM images";
-        
-            $result = $link->query($sql);
-            
-        
-            if ($result->num_rows > 0) {
-            
-                //if($username == $row['username']){
-                    
-                  echo '<table><tr><th>ID</th><th>Content</th><th>Image Name</th><th>Image</th></tr>';
+                    $result = $link->query($sql);
 
-                  while($row = $result->fetch_assoc()) {
 
-                    $id = $row['id'];
-                    $iv = hex2bin($row['iv']);
+                    if ($result->num_rows > 0) {
 
-                    $image_name = $row['img_file_name'];
-                    $image = ($row['img_contents']);
+                          echo '<table><tr><th>ID</th><th>Content</th><th>Image Name</th><th>Image</th></tr>';
+                        
+                          while($row = $result->fetch_assoc()) {
+                              
+                              if($_SESSION["username"] == $row['username']){
+                                  
+                                $id = $row['id'];
+                                $iv = hex2bin($row['iv']);
 
-                    $unencrypted_image = openssl_decrypt(hex2bin($image), $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                                $image_name = $row['img_file_name'];
+                                $image = ($row['img_contents']);
 
-                    $display_unencrypted_image = '<img src="data:image/jpeg;base64,'.base64_encode( $unencrypted_image ).'"/>';
+                                $unencrypted_image = openssl_decrypt(hex2bin($image), $cipher, $key, OPENSSL_RAW_DATA, $iv);
 
-                    echo "<tr><td>$id</td><td>$image_name</td><td>$display_unencrypted_image</td></tr>";
-                  }
+                                $display_unencrypted_image = '<img src="data:image/jpeg;base64,'.base64_encode( $unencrypted_image ).'"/>';
 
-                  echo '</table class = "table table-striped">';
-                    
-                //}
-                
-            } else {
-                
-              echo '<p>There are no images</p>';
-                
-            }
-        
-        ?>
+                                echo "<tr><td>$id</td><td>$image_name</td><td>$display_unencrypted_image</td></tr>";
+                                  
+                              } else {
+                                  
+                                 echo '<p>There are no images</p>'; 
+                                  
+                              }
+                          }
 
-        <h3>Clear Previous Results</h3>
+                          echo '</table>';
 
-        <form method="post">
-          <button type="submit" name="delete-everything">Clear images</button>
+
+                    } else {
+
+                      echo '<p>There are no images</p>';
+
+                    }
+
+                ?>
+            </div>
+        </div>
+
+        <h6 class = "my-5" style="padding-top: 50px;">Clear Older Tests</h6>
+
+        <form method="post" >
+          <button type="submit" name="delete-everything" class="btn btn-primary">Clear images</button>
         </form>
         <br />
-        <p>
+        <p style="padding-top: 50px;">
             <a href="welcome.php" class="btn btn-info">Dashboard</a>
             <a href="reset-password.php" class="btn btn-warning ml-3">Reset Your Password</a>
             <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
