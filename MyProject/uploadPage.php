@@ -55,7 +55,6 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <style>
             body{ font: 14px sans-serif; text-align: center; }
-            #table{align-content: center;}
         </style>
     </head>
     <body>
@@ -91,11 +90,11 @@
         <h2>Create a New Note</h2>
         <div class="custom-file mb-3">
             <form method="post" enctype='multipart/form-data'>
-              <input type="file" class="custom-file-input" id="validatedCustomFile" name="img" accept="image/*">
-              <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-              <br />
+              <div class="form-group">
+                  <input type="file" class="custom-file-input" id="validatedCustomFile" name="img" accept="image/*">
+                  <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+              </div>
               <button type="submit" class="btn btn-primary" name="submit">Submit</button>
-              <br />
             </form>
         </div>
 
@@ -129,7 +128,7 @@
                     echo "<tr><td>$id</td><td>$image_name</td><td>$display_unencrypted_image</td></tr>";
                   }
 
-                  echo '</table id = "table">';
+                  echo '</table class = "table table-striped">';
                     
                 //}
                 
