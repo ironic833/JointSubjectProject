@@ -64,6 +64,7 @@
                 
              $iv = random_bytes(16);
              $iv_hex = bin2hex($iv);
+                
              $escaped_name = $link -> real_escape_string($_POST['name']);
              $encrypted_name = openssl_encrypt($escaped_name, $cipher, $key, OPENSSL_RAW_DATA, $iv);
              $name_hex = bin2hex($encrypted_name);
@@ -99,7 +100,7 @@
                  <input type="email" name= "email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" name="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
         <div>
