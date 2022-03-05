@@ -63,7 +63,7 @@
             if (isset($_POST['submit'])) {
                 
              $iv = random_bytes(16);
-            
+             $iv_hex = bin2hex($iv);
              $escaped_name = $link -> real_escape_string($_POST['name']);
              $encrypted_name = openssl_encrypt($escaped_name, $cipher, $key, OPENSSL_RAW_DATA, $iv);
              $name_hex = bin2hex($encrypted_name);
@@ -124,15 +124,14 @@
                                   
                                 $id = $row['id'];
                                 $iv = hex2bin($row['iv']);
+                                  
+                                $name = $row['name'];
+                                $unencrypted_name = openssl_decrypt(hex2bin($name), $cipher, $key, OPENSSL_RAW_DATA, $iv);
+                                  
+                                $email = $row['email'];
+                                $unencrypted_email = openssl_decrypt(hex2bin($email), $cipher, $key, OPENSSL_RAW_DATA, $iv);
 
-                                $image_name = $row['img_file_name'];
-                                $image = ($row['img_contents']);
-
-                                $unencrypted_image = openssl_decrypt(hex2bin($image), $cipher, $key, OPENSSL_RAW_DATA, $iv);
-
-                                $display_unencrypted_image = '<img src="data:image/jpeg;base64,'.base64_encode( $unencrypted_image ).'"/>';
-
-                                echo "<tr><td>$id</td><td>$image_name</td><td>$display_unencrypted_image</td></tr>";
+                                echo "<tr><td>$id</td><td>$unencrypted_name</td><td>$unencrypted_email</td></tr>";
                                   
                               } else {
                                   
@@ -162,6 +161,7 @@
         <br />
         <p style="padding-top: 50px;">
             <a href="welcome.php" class="btn btn-info">Dashboard</a>
+            <a href="uploadPage.php" class="btn btn-info ml-3">Upload Test Results</a>
             <a href="reset-password.php" class="btn btn-warning ml-3">Reset Your Password</a>
             <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
         </p>
