@@ -87,8 +87,8 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
     </div>
     <br />
     <p>
-        <a href="uploadContacts.php" class="btn btn-info ml-3">Upload Contacts</a>
-        <a href="uploadPage.php" class="btn btn-info">Upload Test Results</a>
+        <a href="uploadContacts.php" class="btn btn-info ">Upload Contacts</a>
+        <a href="uploadPage.php" class="btn btn-info ml-3">Upload Test Results</a>
         <a href="reset-password.php" class="btn btn-warning ml-3">Reset Your Password</a>
         <a href="logout.php" class="btn btn-danger ml-3">Sign Out of Your Account</a>
     </p>

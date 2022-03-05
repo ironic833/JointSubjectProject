@@ -9,6 +9,8 @@
       die('Connection failed: ' . $link->connect_error);
     }
 
+    //needs to be adjusted with an if statement to loop and only delete entries where the username matches the username on the entry in database
+
     if (isset($_POST['delete-everything'])) {
       $sql = 'DROP TABLE images;';
       if (!$link->query($sql) === TRUE) {
@@ -30,8 +32,8 @@
             id int NOT NULL AUTO_INCREMENT,
             username varchar(255) NOT NULL,
             iv varchar(32) NOT NULL,
-            img_file_name varchar(256),
-            img_contents MEDIUMTEXT,
+            img_file_name varchar(256) NOT NULL,
+            img_contents MEDIUMTEXT NOT NULL,
             PRIMARY KEY (id));';
 
     if (!$link->query($sql) === TRUE) {

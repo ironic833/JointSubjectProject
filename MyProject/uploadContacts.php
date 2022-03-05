@@ -9,6 +9,7 @@
       die('Connection failed: ' . $link->connect_error);
     }
 
+    //needs to be adjusted with an if statement to loop and only delete entries where the username matches the username on the entry in database
     if (isset($_POST['delete-everything'])) {
       $sql = 'DROP TABLE contacts;';
       if (!$link->query($sql) === TRUE) {
@@ -29,9 +30,9 @@
     $sql = 'CREATE TABLE IF NOT EXISTS contacts (
             id int NOT NULL AUTO_INCREMENT,
             username varchar(255) NOT NULL,
-            iv varchar(32) NOT NULL,
-            name varchar(256),
-            email varchar(256),
+            iv varchar(255) NOT NULL,
+            name varchar(256) NOT NULL,
+            email varchar(256) NOT NULL,
             PRIMARY KEY (id));';
 
     if (!$link->query($sql) === TRUE) {
@@ -60,20 +61,20 @@
     <body>
         <h1 class = "my-5">Contact Tracing For <?php echo htmlspecialchars($_SESSION["username"]); ?></h1>
         <?php
-            if (isset($_POST['submit'])) {
+            if (isset($_POST['submit-contact'])) {
                 
              $iv = random_bytes(16);
              $iv_hex = bin2hex($iv);
                 
-             $escaped_name = $link -> real_escape_string($_POST['name']);
+             $escaped_name = $link -> real_escape_string($_POST['nameField']);
              $encrypted_name = openssl_encrypt($escaped_name, $cipher, $key, OPENSSL_RAW_DATA, $iv);
              $name_hex = bin2hex($encrypted_name);
                 
-             $escaped_email = $link -> real_escape_string($_POST['email']);
+             $escaped_email = $link -> real_escape_string($_POST['emailField']);
              $encrypted_email = openssl_encrypt($escaped_email, $cipher, $key, OPENSSL_RAW_DATA, $iv);
              $email_hex = bin2hex($encrypted_email);
 
-              $sql = "INSERT INTO contacts (username, iv, name, email) VALUES ('$username','$iv_hex','$name_hex','$email_hex')";
+             $sql = "INSERT INTO contacts (username, iv, name, email) VALUES ('$username','$iv_hex','$name_hex','$email_hex')";
                 
               if ($link->query($sql) === TRUE ) {
                   
@@ -89,23 +90,25 @@
         ?>
         
         <h6 class = "my-5">Add Contact</h6>
+        
         <div class="custom-file mb-3">
-            <form>
+            <form method="post" enctype='multipart/form-data'>
               <div class="form-group">
                 <label for="exampleInputName">Name</label>
-                <input type="text" name ="name" class="form-control" id="exampleInputName" aria-describedby="nameHelp">
+                <input type="text" name ="nameField" class="form-control" id="exampleInputName" aria-describedby="nameHelp" style="padding-bottom: 20px;">
               </div>
               <div class="form-group">
                  <label for="exampleInputEmail1">Email address</label>
-                 <input type="email" name= "email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                 <input type="email" name= "emailField" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                 <small id="emailHelp" class="form-text text-muted" style="padding-bottom: 30px;">We'll never share your email with anyone else.</small>
               </div>
-              <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary" name="submit-contact">Submit</button>
             </form>
         </div>
-        <div>
+        
+        <div style="padding-top: 40px;">
             <div>
-                <h6 class = "my-5"  style="padding-top: 50px;">Previously Added Contacts</h6>
+                <h6 class = "my-5"  style="padding-top: 150px;">Previously Added Contacts</h6>
             </div>
             <div style="padding-left: 33%;">
                 <?php
