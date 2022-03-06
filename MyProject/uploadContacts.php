@@ -9,16 +9,6 @@
       die('Connection failed: ' . $link->connect_error);
     }
 
-    //needs to be adjusted with an if statement to loop and only delete entries where the username matches the username on the entry in database
-    /*
-    if (isset($_POST['delete-everything'])) {
-      $sql = 'DROP TABLE contacts;';
-      if (!$link->query($sql) === TRUE) {
-        die('Error dropping database: ' . $link->error);
-      }
-    }
-    */
-
     $sql = 'CREATE DATABASE IF NOT EXISTS demo;';
     if (!$link->query($sql) === TRUE) {
       die('Error creating database: ' . $link->error);
@@ -159,14 +149,6 @@
             </div>
         </div>
         
-        <!--
-        <h6 class = "my-5" style="padding-top: 50px;">Clear Listed Contacts</h6>
-        
-        
-        <form method="post" >
-          <button type="submit" name="delete-everything" class="btn btn-primary">Clear Contacts</button>
-        </form>
-        -->
         <br />
         <p style="padding-top: 50px;">
             <a href="welcome.php" class="btn btn-info">Dashboard</a>

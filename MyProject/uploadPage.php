@@ -19,19 +19,6 @@
       die('Connection failed: ' . $link->connect_error);
     }
 
-    //needs to be adjusted with an if statement to loop and only delete entries where the username matches the username on the entry in database
-    /*
-    if (isset($_POST['delete-everything'])) {
-        
-      $username = $_POST['username'];    
-        
-      $sql = 'DELETE FROM images WHERE username = '$username'';
-      if (!$link->query($sql) === TRUE) {
-        die('Error dropping entry: ' . $link->error);
-      }
-    }
-    */
-
     $sql = 'CREATE DATABASE IF NOT EXISTS demo;';
     if (!$link->query($sql) === TRUE) {
       die('Error creating database: ' . $link->error);
@@ -155,16 +142,6 @@
                 ?>
             </div>
         </div>
-
-        <!--
-
-        <h6 class = "my-5" style="padding-top: 50px;">Clear Older Tests</h6>
-        
-        
-        <form method="post" >
-          <button type="submit" name="delete-everything" class="btn btn-primary">Clear images</button>
-        </form>
-        -->
         
         <br />
         <p style="padding-top: 50px;">
