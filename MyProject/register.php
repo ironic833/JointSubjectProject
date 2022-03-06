@@ -4,8 +4,8 @@
 require_once "config.php";
  
 // Define variables and initialize with empty values
-$username = $password = $confirm_password = $fullName = $dateOfBirth = $address = $phoneNumber = "";
-$username_err = $password_err = $confirm_password_err = $fullName_err = $dateOfBirth_err =$address_err = $phoneNumber_err = "";
+$username = $password = $confirm_password = $fullName = $dateOfBirth = $address = $phoneNumber = $GDPRCheck = "";
+$username_err = $password_err = $confirm_password_err = $fullName_err = $dateOfBirth_err =$address_err = $phoneNumber_err = $GDPRCheck_err = "";
 $cipher = 'AES-128-CBC';
 $key = 'thebestsecretkey';
 
@@ -140,6 +140,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $phoneNumber = trim($_POST["phoneNumber"]);
         
     }
+    
+    if(empty($_POST["GDPRCheck"])){
+        
+        $GDPRCheck_err = "Please agree to GDPR terms";
+        
+    } 
     
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($dateOfBirth_err) && empty($address_err) && empty($phoneNumber_err)){
@@ -278,6 +284,12 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 <label>Enter Phone Number</label>
                 <input type="tel" name="phoneNumber" class="form-control <?php echo (!empty($phoneNumber_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $phoneNumber; ?>"  placeholder="0xx-xxx-xxxx" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
                 <span class="invalid-feedback"><?php echo $phoneNumber_err; ?></span>
+            </div>
+            
+            <div class="form-group form-check">
+                <input type="checkbox" name="GDPRChceck" class="form-check-input <?php echo (!empty($GDPRCheck_err)) ? 'is-invalid' : ''; ?>" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">I consent to my data being used in compliance with GDPR</label>
+                <span class="invalid-feedback"><?php echo $GDPRCheck_err; ?></span>
             </div>
             
             <!--submit button-->
