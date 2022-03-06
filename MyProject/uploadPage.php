@@ -5,18 +5,32 @@
     $cipher = 'AES-128-CBC';
     $key = 'thebestsecretkey';
 
+    session_start();
+ 
+    // Check if the user is logged in, if not then redirect to login page
+    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
+        header("location: login.php");
+        exit;
+    }
+
+    $username = $_SESSION["username"];
+
     if ($link->connect_error) {
       die('Connection failed: ' . $link->connect_error);
     }
 
     //needs to be adjusted with an if statement to loop and only delete entries where the username matches the username on the entry in database
-
+    /*
     if (isset($_POST['delete-everything'])) {
-      $sql = 'DROP TABLE images;';
+        
+      $username = $_POST['username'];    
+        
+      $sql = 'DELETE FROM images WHERE username = '$username'';
       if (!$link->query($sql) === TRUE) {
-        die('Error dropping database: ' . $link->error);
+        die('Error dropping entry: ' . $link->error);
       }
     }
+    */
 
     $sql = 'CREATE DATABASE IF NOT EXISTS demo;';
     if (!$link->query($sql) === TRUE) {
@@ -40,15 +54,6 @@
       die('Error creating table: ' . $link->error);
     }
 
-    session_start();
- 
-    // Check if the user is logged in, if not then redirect him to login page
-    if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
-        header("location: login.php");
-        exit;
-    }
-
-    $username = $_SESSION["username"];
 ?>
 <html>
     <head>
@@ -151,11 +156,16 @@
             </div>
         </div>
 
-        <h6 class = "my-5" style="padding-top: 50px;">Clear Older Tests</h6>
+        <!--
 
+        <h6 class = "my-5" style="padding-top: 50px;">Clear Older Tests</h6>
+        
+        
         <form method="post" >
           <button type="submit" name="delete-everything" class="btn btn-primary">Clear images</button>
         </form>
+        -->
+        
         <br />
         <p style="padding-top: 50px;">
             <a href="welcome.php" class="btn btn-info">Dashboard</a>

@@ -1,23 +1,10 @@
 <?php
 
-/*
-
-Scenario 1
-
-Upload an antigen test with a photo.
-
-Our national health service has decided to create a portal that will allow citizens to report a positive antigen test for COVID-19 and to list their close contacts online. 
-
-Citizens who have symptoms of the virus or are a close contact of a confirmed case can use store-bought test kits and upload any positive results to the portal. 
-
-The system will require citizens to create an account with a username and password, to provide personal information including full name, address, date of birth and phone number, and to upload an image of a positive antigen test. They can also provide a list of close contacts, including their full names and phone numbers.
-
-*/
 
 // Initialize the session
 session_start();
  
-// Check if the user is already logged in, if yes then redirect him to welcome page
+// Check if the user is already logged in, if yes then redirect to welcome page
 if(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true){
     header("location: welcome.php");
     exit;

@@ -1,4 +1,3 @@
-<!--encryption and decryption here needs to be finished-->
 
 <?php
 // Include config file
